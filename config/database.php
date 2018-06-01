@@ -1,5 +1,7 @@
 <?php
 
+$DATABASE_URL = parse_url('postgres://fefjogsfbgxzjv:2979e9588252e59d9b08caef873046b5223349c7ba48c8a867092ade35227d34@ec2-107-20-176-27.compute-1.amazonaws.com:5432/d5u25otik689i6');
+
 return [
 
     /*
@@ -13,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,11 +57,16 @@ return [
         ],
 
         'pgsql' => [
-            'host' => getenv("DATABASE_URL") ? parse_url(getenv("DATABASE_URL"))["host"] : '',
-            'port' => getenv("DATABASE_URL") ? parse_url(getenv("DATABASE_URL"))["port"] : '',
-            'database' => getenv("DATABASE_URL") ? substr(parse_url(getenv("DATABASE_URL"))["path"], 1) : '',
-            'username' => getenv("DATABASE_URL") ? parse_url(getenv("DATABASE_URL"))["user"] : '',
-            'password' => getenv("DATABASE_URL") ? parse_url(getenv("DATABASE_URL"))["pass"] : '',
+            'driver' => 'pgsql',
+            'host' => $DATABASE_URL["host"],
+            'port' => $DATABASE_URL["port"],
+            'database' => ltrim($DATABASE_URL["path"], "/"),
+            'username' => $DATABASE_URL["user"],
+            'password' => $DATABASE_URL["pass"],
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'require',
         ],
 
         'sqlsrv' => [
