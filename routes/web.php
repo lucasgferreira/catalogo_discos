@@ -14,7 +14,7 @@
 
 Route::resource('/admin/discos', 'Admin\DiscosController');
 
-Auth::routes();
+
 
 Route::group(['midleware' => ['auth'], 'namespace' => 'Admin', 'prefix' => 'admin'], function (){
 
@@ -27,5 +27,6 @@ Route::group(['midleware' => ['auth'], 'namespace' => 'Admin', 'prefix' => 'admi
     Route::get('discos', 'DiscosController@index')->name('admin.discos');
 });
 
-Route::get('/', 'Site\SiteController@index')->name('home');
+Auth::routes();
+Route::get('/', 'HomeController@index')->name('home');
 
