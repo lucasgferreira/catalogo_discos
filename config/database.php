@@ -55,16 +55,11 @@ return [
         ],
 
         'pgsql' => [
-            'driver' => 'pgsql',
-            'host' => $host,
-            'port' => env('DB_PORT', '5432'),
-            'database' => $database,
-            'username' => $username,
-            'password' => $password,
-            'charset' => 'utf8',
-            'prefix' => '',
-            'schema' => 'public',
-            'sslmode' => 'prefer',
+            'host' => getenv("DATABASE_URL") ? parse_url(getenv("DATABASE_URL"))["host"] : '',
+            'port' => getenv("DATABASE_URL") ? parse_url(getenv("DATABASE_URL"))["port"] : '',
+            'database' => getenv("DATABASE_URL") ? substr(parse_url(getenv("DATABASE_URL"))["path"], 1) : '',
+            'username' => getenv("DATABASE_URL") ? parse_url(getenv("DATABASE_URL"))["user"] : '',
+            'password' => getenv("DATABASE_URL") ? parse_url(getenv("DATABASE_URL"))["pass"] : '',
         ],
 
         'sqlsrv' => [
