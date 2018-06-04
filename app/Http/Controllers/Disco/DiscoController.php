@@ -1,98 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Disco;
 
 use App\Http\Requests\DiscoFormRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DiscoFormRequestUpdate;
+use App\Models\Artista;
+use App\Models\Categoria;
 use App\Models\Disco;
 use Illuminate\Support\Facades\Storage;
 
-class DiscosController extends Controller
+class DiscoController extends Controller
 {
     private $disco;
+    private $categoria;
+    private $artista;
 
-    private $categorias = [
-        'Alternativo',
-        'Axé',
-        'Blues',
-        'Bolero',
-        'Bossa Nova',
-        'Brega',
-        'Clássico',
-        'Country',
-        'Cuarteto',
-        'Cumbia',
-        'Dance',
-        'Disco',
-        'Eletrônica',
-        'Emocore',
-        'Fado',
-        'Folk',
-        'Forró',
-        'Funk',
-        'Funk Internacional',
-        'Gospel/Religioso',
-        'Gótico',
-        'Grunge',
-        'Guarânia',
-        'Hard Rock',
-        'Hardcore',
-        'Heavy Metal',
-        'Hip Hop/Rap',
-        'House',
-        'Indie',
-        'Industrial',
-        'Infantil',
-        'Instrumental',
-        'J-Pop/J-Rock',
-        'Jazz',
-        'Jovem Guarda',
-        'K-Pop/K-Rock',
-        'Mambo',
-        'Marchas/Hinos',
-        'Mariachi',
-        'Merengue',
-        'MPB',
-        'Música andina',
-        'New Age',
-        'New Wave',
-        'Pagode',
-        'Pop',
-        'Pop Rock',
-        'Post-Rock',
-        'Power-Pop',
-        'Rock Progressivo',
-        'Psicodelia',
-        'Punk Rock',
-        'Ranchera',
-        'R&B',
-        'Reggae',
-        'Reggaeton',
-        'Regional',
-        'Rock',
-        'Rock and Roll',
-        'Rockabilly',
-        'Romântico',
-        'Salsa',
-        'Samba',
-        'Samba Enredo',
-        'Sertanejo',
-        'Ska',
-        'Soft Rock',
-        'Soul',
-        'Surf Music',
-        'Tango',
-        'Tecnopop',
-        'Trova',
-        'Velha Guarda',
-        'World Music',
-        'Zamba',
-        'Zouk',
-    ];
 
-    public function __construct(Disco $disco)
+    public function __construct(Disco $disco, Categoria $categoria, Artista $artista)
     {
         $this->disco = $disco;
+        $this->categoria = $categoria;
+        $this->artista = $artista;
         $this->middleware('auth');
     }
 
@@ -104,9 +33,12 @@ class DiscosController extends Controller
     public function index()
     {
 
-        $discos = $this->disco->paginate(12);
+        $discos = $this->disco->join('categorias', 'discos.id_categoria', 'categorias.id')
+            ->join('artistas', 'discos.id_artista', 'artistas.id')
+            ->selectRaw('discos.id, discos.album, discos.capa, categorias.nome as categoria, artistas.nome as artista')
+            ->paginate(12);
 
-        return view('admin.discos.discos', compact('discos'));
+        return view('disco.discos', compact('discos'));
     }
 
 
@@ -118,10 +50,11 @@ class DiscosController extends Controller
     public function create()
     {
         //
-        $categorias = $this->categorias;
+        $categorias = $this->categoria->all();
+        $artistas = $this->artista->all();
         $title = "Cadastrar novo disco";
 
-        return view('admin.discos.index', compact('title', 'categorias'));
+        return view('disco.index', compact('title', 'categorias', 'artistas'));
     }
 
     /**
@@ -135,7 +68,6 @@ class DiscosController extends Controller
         $dataForm = $request->except('_token');
 
         //$this->validate($request, $this->disco->rules, $this->disco->messages);
-
 
         // Define o valor default para a variável que contém o nome da imagem
         $nameFile = null;
@@ -166,11 +98,11 @@ class DiscosController extends Controller
 
         }
 
-        $dataForm['id_user']= auth()->user()->id;
+        $dataForm['id_user'] = auth()->user()->id;
         $insert = $this->disco->create($dataForm);
 
         if ($insert)
-            return redirect()->route('admin.discos');
+            return redirect()->route('disco.discos');
         else
             return redirect()->back();
     }
@@ -195,12 +127,13 @@ class DiscosController extends Controller
      */
     public function edit($id)
     {
-        $categorias = $this->categorias;
+        $categorias = $this->categoria->all();
+        $artistas = $this->artista->all();
         $disco = $this->disco->findOrFail($id);
 
         $title = "Editar o disco: <strong>{$disco->album}</strong>";
 
-        return view('admin.discos.index', compact('title', 'categorias', 'disco'));
+        return view('disco.index', compact('title', 'categorias', 'disco', 'artistas'));
     }
 
     /**
@@ -210,7 +143,7 @@ class DiscosController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(DiscoFormRequest $request, $id)
+    public function update(DiscoFormRequestUpdate $request, $id)
     {
         $dataForm = $request->all();
         $disco = $this->disco->find($id);
@@ -245,11 +178,10 @@ class DiscosController extends Controller
         $update = $disco->update($dataForm);
 
 
-
         if ($update) {
-            return redirect()->route('admin.discos');
+            return redirect()->route('disco.discos');
         } else {
-            return redirect()->route('admin.discos.edit', $id)->with(['errors' => 'Falha ao editar!']);
+            return redirect()->route('disco.discos.edit', $id)->with(['errors' => 'Falha ao editar!']);
         }
     }
 
@@ -270,13 +202,13 @@ class DiscosController extends Controller
 
             $delete = $disco->delete();
         }catch (\Exception $e){
-            return redirect()->route('admin.discos.destroy', $id)->with(['errors' => 'Falha ao excluir!']);
+            return redirect()->route('disco.discos.destroy', $id)->with(['errors' => 'Falha ao excluir!']);
         }
 
         if ($delete) {
-            return redirect()->route('admin.discos');
+            return redirect()->route('disco.discos');
         } else {
-            return redirect()->route('admin.discos.destroy', $id)->with(['errors' => 'Falha ao excluir!']);
+            return redirect()->route('disco.discos.destroy', $id)->with(['errors' => 'Falha ao excluir!']);
         }
     }
 }

@@ -8,6 +8,6 @@ class Disco extends Model
 {
 
     protected $fillable = [
-        'album', 'artista', 'genero', 'capa', 'id_user'
+        'album', 'capa', 'id_user', 'id_artista', 'id_categoria'
     ];
 }

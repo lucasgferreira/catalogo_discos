@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DiscoFormRequest extends FormRequest
+class ArtistaFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +24,13 @@ class DiscoFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'album' => 'required|min:1|max:100',
-            'capa' => 'required|min:1|max:255',
-            'id_categoria' => 'required',
-            'id_artista' => 'required'
+            'nome' => 'required|min:1|max:150',
         ];
     }
 
     public function messages()
     {
         return [
-            'id_categoria.required' => 'O campo do categoria é obrigatório.',
-            'id_artista.required' => 'O campo do artista é obrigatório.',
-            'album.required' => 'O campo do álbum é obrigatório.',
             'required' => 'O campo do :attribute é obrigatório.',
         ];
     }

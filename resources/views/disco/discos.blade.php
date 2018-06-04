@@ -13,7 +13,7 @@
         <div class="col-12">
             @foreach($discos as $disco)
 
-                <div class="col-lg-4 col-xs-6">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="box box-success">
 
                         <img class="img-responsive pad" src="{{ url("storage/capas/{$disco->capa}") }}"
@@ -25,14 +25,14 @@
 
                             <p class="text-dark text-center">Artista: {{$disco->artista}}</p>
 
-                            <p class="text-muted text-center">Gênero: {{$disco->genero}}</p>
+                            <p class="text-muted text-center">Gênero: {{$disco->categoria}}</p>
 
                         </div>
                         @if( Auth::user()->isAdmin )
                             <div class="box-footer">
                                 <div class="row">
                                     <div class="col col-xs-12 col-md-6">
-                                        <a class="btn btn-success btn-block" href="{{route('admin.edit', $disco->id)}}"><i
+                                        <a class="btn btn-success btn-block" href="{{route('disco.edit', $disco->id)}}"><i
                                                     class="fa fa-edit"></i> Editar</a>
                                     </div>
 

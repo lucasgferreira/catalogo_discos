@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DiscoFormRequest extends FormRequest
+class DiscoFormRequestUpdate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,6 @@ class DiscoFormRequest extends FormRequest
     {
         return [
             'album' => 'required|min:1|max:100',
-            'capa' => 'required|min:1|max:255',
             'id_categoria' => 'required',
             'id_artista' => 'required'
         ];

@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <h2 class="page-header">
-                    <i class="fa fa-music"></i> Catálogo de discos
+                    <i class="ion-disc"></i> Catálogo de discos
                     <small class="pull-right">Sex 01 Jun 2018
                     </small>
                 </h2>
@@ -28,7 +28,7 @@
                 <address>
                     <strong>Lucas Gonçalves</strong><br>
                     <a href="https://github.com/lucasgferreira">https://github.com/lucasgferreira</a><br>
-                    Codigo: <a href="https://github.com/lucasgferreira">https://github.com/lucasgferreira</a><br>
+                    Codigo: <a href="https://github.com/lucasgferreira/catalogo_discos">https://github.com/lucasgferreira/catalogo_discos</a><br>
                 </address>
             </div>
 

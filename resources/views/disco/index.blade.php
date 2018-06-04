@@ -13,7 +13,7 @@
             </p>
         </div>
         <div class="icon">
-            <i style="font-size: 90%;" class="glyphicon glyphicon-headphones"></i>
+            <i style="font-size: 90%;" class="ion-disc"></i>
         </div>
 
 
@@ -69,26 +69,38 @@
                 <div class="form-group">
                     <label for="artista" class="col-sm-2 control-label">Artista</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="artista" id="artista" placeholder="Artista"
-                               maxlength="150" value="{{$disco->artista or old('artista') }}">
+                        <select class="form-control" name="id_artista" id="id_artista">
+                            <option selected value="">Selecione o artista</option>
+
+                            @foreach($artistas as $artista)
+                                <option value="{{$artista->id}}"
+
+                                        @if( isset( $disco ) && $disco->id_artista == $artista->id )
+                                        selected
+                                @else
+                                    {{old('id_artista') == $artista  ? 'selected="selected"': ''}}
+                                        @endif
+                                >{{$disco->$artista->nome or $artista->nome}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="genero" class="col-sm-2 control-label">Gênero</label>
                     <div class="col-sm-10">
-                        <select class="form-control" name="genero" id="genero">
+                        <select class="form-control" name="id_categoria" id="id_categoria">
                             <option selected value="">Selecione o Gênero</option>
 
                             @foreach($categorias as $categoria)
-                                <option value="{{$categoria}}"
+                                <option value="{{$categoria->id}}"
 
-                                @if( isset( $disco ) && $disco->genero == $categoria )
+                                @if( isset( $disco ) && $disco->id_categoria == $categoria->id )
                                         selected
                                 @else
-                                    {{old('genero') == $categoria  ? 'selected="selected"': ''}}
+                                    {{old('$categoria') == $categoria  ? 'selected="selected"': ''}}
                                 @endif
-                                >{{$disco->$categoria or $categoria}}</option>
+                                >{{$disco->$categoria->nome or $categoria->nome}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -107,19 +119,5 @@
             </div><!-- /.box-footer -->
         </form>
     </div>
-    @endif
-
-    @if(! Auth::user()->isAdmin )
-        <div class="small-box bg-red">
-            <div class="inner">
-                <h3>Atenção</h3>
-
-                <p> Área somente para administradores </p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-alert-circled"></i>
-            </div>
-
-        </div>
     @endif
 @stop

@@ -2,13 +2,14 @@
 
 @section('adminlte_css')
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/style.css') }}">
     @yield('css')
 @stop
 
 @section('body_class', 'register-page')
 
 @section('body')
-    <div class="register-box">
+    <div class="register-box box">
         <div class="register-logo">
             <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}">{!! config('adminlte.logo', '<b>Admin</b>LTE') !!}</a>
         </div>
